@@ -23,6 +23,52 @@ class UserController {
 
     return res.status(201).json();
   }
+
+  async update(req, res) {
+    const { name, email, password, old_password } = req.body
+    const { id } = req.params
+
+    const user = await knex("users").where({ id }).first()
+
+    if (!user) {
+      throw new AppError("User not found.")
+    }
+
+    const userWithUpdatedEmail = await knex("users").where({ email }).first()
+    
+    if (userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id) {
+      throw new AppError("Email already in use.")
+    }
+
+    user.name = name ?? user.name;
+    user.email = email ?? user.email;
+
+    if (password && !old_password) {
+      throw new AppError("You need to provide the old password to make a new one.")
+    }
+
+    if (password && old_password) {
+      const checkOldPassword = await compare(old_password, user.password)
+
+      if (!checkOldPassword) {
+        throw new AppError("Old password does not match.")
+      }
+
+      user.password = await hash(password, 8)
+
+    }
+
+    await knex("users").where({ id }).update({
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      updated_at: (new Date().toISOString().split('T')[0] + ' '
+      + new Date().toTimeString().split(' ')[0]),
+      id
+    })
+
+    return res.json();
+  }
 }
 
 module.exports = UserController

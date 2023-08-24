@@ -10,7 +10,7 @@ exports.up = async (knex) => {
       table.text("password");
       table.text("avatar").nullable();
 
-      table.timestamp("create_at").default(knex.fn.now());
+      table.timestamp("created_at").default(knex.fn.now());
       table.timestamp("updated_at").default(knex.fn.now());
 
     })
