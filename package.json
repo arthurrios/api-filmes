@@ -1,7 +1,7 @@
 {
   "name": "api-filmes",
   "version": "1.0.0",
-  "description": "",
+  "description": "Notas sobre filmes",
   "main": "index.js",
   "scripts": {
     "start": "node ./src/server.js",
