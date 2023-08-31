@@ -4,7 +4,7 @@ const AppError = require("../utils/AppError")
 class NotesController {
   async create(req, res) {
     const { title, description, rating, tags } = req.body
-    const { user_id } = req.params
+    const { user_id } = req.user.id
 
     if (rating < 1 || rating > 5) {
       throw new AppError("Rating must be between 1 and 5.")
@@ -50,7 +50,9 @@ class NotesController {
   }
 
   async index(req, res) {
-    const { title, user_id, tags } = req.query
+    const { title, tags } = req.query
+
+    const user_id = req.user.id
 
     let notes;
 
@@ -67,6 +69,7 @@ class NotesController {
       .whereLike("notes.title", `%${title}%`)
       .whereIn("name", filterTags)
       .innerJoin("notes", "notes.id", "tags.note_id")
+      .groupBy("notes.id")
       .orderBy("notes.title")
     } else {
       notes = await knex("notes")
