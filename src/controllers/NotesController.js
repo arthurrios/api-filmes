@@ -6,7 +6,7 @@ class NotesController {
     const { title, description, rating, tags } = req.body
     const { user_id } = req.user.id
 
-    if (rating < 1 || rating > 5) {
+    if (rating < 0 || rating > 5) {
       throw new AppError("Rating must be between 1 and 5.")
     }
 
@@ -26,7 +26,7 @@ class NotesController {
     })
     await knex("tags").insert(tagsInsert);
 
-    res.json();
+    return res.json();
   }
 
   async show(req, res) {
