@@ -4,7 +4,7 @@ const AppError = require("../utils/AppError")
 class NotesController {
   async create(req, res) {
     const { title, description, rating, tags } = req.body
-    const { user_id } = req.user.id
+    const user_id = req.user.id
 
     if (rating < 0 || rating > 5) {
       throw new AppError("Rating must be between 1 and 5.")
