@@ -3,7 +3,7 @@ const AppError = require("../utils/AppError")
 
 class NotesController {
   async create(req, res) {
-    const { title, description, rating, tags, author } = req.body
+    const { title, description, rating, tags, author, author_avatar } = req.body
     const user_id = req.user.id
 
     if (rating < 0 || rating > 5) {
@@ -15,6 +15,7 @@ class NotesController {
       description,
       rating,
       author,
+      author_avatar,
       user_id,
     })
 
