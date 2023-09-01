@@ -3,7 +3,7 @@ const AppError = require("../utils/AppError")
 
 class NotesController {
   async create(req, res) {
-    const { title, description, rating, tags } = req.body
+    const { title, description, rating, tags, author } = req.body
     const user_id = req.user.id
 
     if (rating < 0 || rating > 5) {
@@ -14,14 +14,15 @@ class NotesController {
       title,
       description,
       rating,
-      user_id
+      author,
+      user_id,
     })
 
     const tagsInsert = tags.map(name => {
       return {
         note_id,
         name,
-        user_id
+        user_id,
       }
     })
     await knex("tags").insert(tagsInsert);
