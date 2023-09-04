@@ -1,32 +1,15 @@
 const knex = require("../database/knex")
-const AppError = require("../utils/AppError")
+const NoteService = require("../services/NoteService")
 
 class NotesController {
   async create(req, res) {
     const { title, description, rating, tags, author, author_avatar } = req.body
     const user_id = req.user.id
 
-    if (rating < 0 || rating > 5) {
-      throw new AppError("Rating must be between 1 and 5.")
-    }
-
-    const [ note_id ] = await knex("notes").insert({
-      title,
-      description,
-      rating,
-      author,
-      author_avatar,
-      user_id,
-    })
-
-    const tagsInsert = tags.map(name => {
-      return {
-        note_id,
-        name,
-        user_id,
-      }
-    })
-    await knex("tags").insert(tagsInsert);
+    const noteRepository = new NoteRepository()
+    const noteService = new NoteService(noteRepository)
+    
+    await noteService.execute({ title, description, rating, tags, author, author_avatar, user_id })
 
     return res.json();
   }
