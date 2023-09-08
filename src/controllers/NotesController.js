@@ -1,5 +1,6 @@
 const knex = require("../database/knex")
 const NoteService = require("../services/NoteService")
+const NoteRepository = require("../repositories/notes/NoteRepository")
 
 class NotesController {
   async create(req, res) {
